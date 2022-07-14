@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     ant \
     nodejs \
-    npm
+    npm \
+    git
 
 CMD ["tail", "-f", "/var/log/lastlog"]
