@@ -14,11 +14,26 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     git \
-    sudo
+    sudo \
+    openssh-server \
+    tzdata \
+    dos2unix \
+    ntp
 
-RUN useradd -ms /bin/bash nerd4ever -g root -G sudo \
-    && echo 'nerd4ever ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-USER nerd4ever
-WORKDIR /home/nerd4ever
+RUN mkdir -p /workspace \
+    && useradd -ms /bin/bash -d /workspace nerd4ever \
+    && chown -R nerd4ever:nerd4ever /workspace \
+    && echo $($RANDOM | md5sum | cut -d " " -f 1) > /workspace/password.txt \
+    && echo "nerd4ever:$(cat /workspace/password.txt)" | chpasswd \
+    && echo 'nerd4ever ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
+    && usermod -a -G sudo nerd4ever
 
-CMD ["tail", "-f", "/var/log/lastlog"]
+COPY entrypoint.sh /entrypoint
+RUN dos2unix /entrypoint \
+    && chmod +x /entrypoint
+
+WORKDIR /workspace
+
+EXPOSE 22
+
+CMD ["/entrypoint", "daemon"]
