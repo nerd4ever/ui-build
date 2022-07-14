@@ -13,6 +13,12 @@ RUN apt-get update && apt-get install -y \
     ant \
     nodejs \
     npm \
-    git
+    git \
+    sudo
+
+RUN useradd -ms /bin/bash nerd4ever -g root -G sudo \
+    && echo 'nerd4ever ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+USER nerd4ever
+WORKDIR /home/nerd4ever
 
 CMD ["tail", "-f", "/var/log/lastlog"]
