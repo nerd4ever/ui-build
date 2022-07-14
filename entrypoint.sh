@@ -4,8 +4,8 @@ set -e
 
 case $1 in
   daemon)
-    /etc/init.d/ssh start
-    /etc/init.d/ntp start
+    sudo /etc/init.d/ssh start
+    sudo /etc/init.d/ntp start
     tail -f /var/log/lastlog
     exit 0;
   ;;

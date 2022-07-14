@@ -11,8 +11,6 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
     ant \
-    nodejs \
-    npm \
     git \
     sudo \
     openssh-server \
@@ -28,9 +26,17 @@ RUN mkdir -p /workspace \
     && echo 'nerd4ever ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
     && usermod -a -G sudo nerd4ever
 
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - \
+    &&apt-get install -y nodejs
+    
+RUN mkdir -p /usr/local/lib/node_modules \
+    && chown -R nerd4ever:nerd4ever /usr/local/lib/node_modules
+
 COPY entrypoint.sh /entrypoint
 RUN dos2unix /entrypoint \
     && chmod +x /entrypoint
+
+USER nerd4ever
 
 WORKDIR /workspace
 
