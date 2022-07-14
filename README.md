@@ -17,3 +17,8 @@ services:
 volumes:
   build_ui_volume:
 ````
+
+Command line example
+````
+docker run -d -p 15022:22 --name build_ui --restart=always nerd4ever/build-ui:latest
+````
